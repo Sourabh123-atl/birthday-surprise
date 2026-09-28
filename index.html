@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#FAF6F0" />
+  <meta name="description" content="A crazy fun, interactive birthday surprise website for Anjali, created with love and friendship by Sourabh." />
+  <title>Happy Birthday, Anjali! 🎂💖✨ | A Surprise from Sourabh</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="theme-day">
+  <!-- Interactive Background and Effect Canvases -->
+  <canvas id="ambientCanvas" class="ambient-canvas" aria-hidden="true"></canvas>
+  <canvas id="sparkleTrailCanvas" class="sparkle-trail-canvas" aria-hidden="true"></canvas>
+  <canvas id="fireworksCanvas" class="fireworks-canvas" aria-hidden="true"></canvas>
+  <canvas id="confettiCannonCanvas" class="confetti-cannon-canvas" aria-hidden="true"></canvas>
+
+  <!-- Floating Helium Balloon Sky (Interactive Pop Game) -->
+  <div id="balloonSky" class="balloon-sky" aria-label="Interactive floating balloons"></div>
+
+  <!-- Crazy Disco Lights Overlay (Toggled during Crazy Mode) -->
+  <div id="discoOverlay" class="disco-lights-overlay" aria-hidden="true"></div>
+
+  <!-- Floating Crazy Party Blast Floating Action Button -->
+  <div class="crazy-party-fab-wrap">
+    <button id="crazyPartyFab" class="crazy-party-fab" title="Activate Crazy Party Mode!" aria-label="Activate Crazy Party Mode">
+      <span class="fab-icon">💥</span>
+      <span class="fab-text">Party Blast!</span>
+      <span class="fab-badge" id="partyScoreBadge">0 🎈</span>
+    </button>
+  </div>
+
+  <!-- Fixed Top Navigation & Progress Bar -->
+  <header class="top-nav" id="topNav">
+    <div class="nav-container">
+      <div class="nav-brand" role="banner">
+        <span class="nav-gift-icon">👑</span>
+        <span class="brand-text">Happy Birthday Anjali</span>
+      </div>
+
+      <!-- 5-Gift Progress Indicator -->
+      <div class="gift-progress-tracker" id="giftProgressTracker" aria-label="Gift Progress">
+        <div class="progress-step active" id="step1" title="Gift 1: Letter"><span>1</span></div>
+        <div class="progress-step" id="step2" title="Gift 2: Memories"><span>2</span></div>
+        <div class="progress-step" id="step3" title="Gift 3: Chapters"><span>3</span></div>
+        <div class="progress-step" id="step4" title="Gift 4: Wishes"><span>4</span></div>
+        <div class="progress-step" id="step5" title="Gift 5: Final Surprise"><span>5</span></div>
+      </div>
+
+      <!-- Live Controls Cluster -->
+      <div class="nav-controls">
+        <!-- Crown Filter Toggle -->
+        <button id="crownToggleBtn" class="control-btn crown-btn" title="Toggle Queen Crown for Anjali!" aria-label="Toggle Crown">
+          <span class="btn-icon">👑</span>
+          <span class="btn-label">Crown</span>
+        </button>
+
+        <!-- Multi-Track Audio Synthesizer -->
+        <div class="audio-control-cluster">
+          <button id="musicToggleBtn" class="control-btn music-btn" aria-label="Toggle birthday melody" title="Play / Mute Music">
+            <span class="btn-icon" id="musicIcon">🔇</span>
+            <span class="btn-label" id="musicLabel">Music</span>
+            <div class="equalizer-bars" id="eqBars">
+              <span></span><span></span><span></span><span></span>
+            </div>
+          </button>
+          
+          <select id="musicTrackSelect" class="track-select-dropdown" aria-label="Select background melody">
+            <option value="0">🎵 Soft Music Box</option>
+            <option value="1">✨ Celestial Star Chimes</option>
+            <option value="2">🎷 Upbeat Celebration Waltz</option>
+            <option value="3">🪅 Crazy Party Beats Remix</option>
+          </select>
+        </div>
+
+        <!-- Release Helium Balloons Button -->
+        <button id="spawnBalloonsBtn" class="control-btn balloon-spawn-btn" title="Release Floating Balloons (Tap to pop!)" aria-label="Release Balloons">
+          <span class="btn-icon">🎈</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Page Container -->
+  <main class="page-wrapper" id="pageWrapper">
+    
+    <!-- =========================================================================
+         STAGE 0: CLOSED INITIAL SURPRISE 3D GIFT BOX
+         ========================================================================= -->
+    <section class="initial-surprise-stage" id="initialSurpriseStage">
+      <div class="surprise-box-wrapper">
+        
+        <!-- Floating Sparkle Accents -->
+        <div class="floating-sparkles-cluster" aria-hidden="true">
+          <span class="sparkle-item sp1">✨</span>
+          <span class="sparkle-item sp2">🌸</span>
+          <span class="sparkle-item sp3">💛</span>
+          <span class="sparkle-item sp4">✨</span>
+          <span class="sparkle-item sp5">🎈</span>
+          <span class="sparkle-item sp6">👑</span>
+        </div>
+
+        <!-- 3D Luxury Interactive Gift Box -->
+        <div class="luxury-gift-box" id="luxuryGiftBox" role="button" tabindex="0" aria-label="Tap to open your birthday surprise">
+          <div class="gift-box-glow"></div>
+          
+          <div class="gift-lid" id="giftLid">
+            <div class="gift-ribbon-bow">
+              <span class="bow-loop loop-left"></span>
+              <span class="bow-loop loop-right"></span>
+              <span class="bow-center">👑</span>
+            </div>
+            <div class="lid-ribbon-vertical"></div>
+          </div>
+
+          <div class="gift-body">
+            <div class="body-ribbon-vertical"></div>
+            <div class="body-ribbon-horizontal"></div>
+            <div class="gift-tag">
+              <span>SPECIAL DELIVERY FOR ANJALI 💛</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Surprise Text & Opening CTA -->
+        <div class="surprise-text-box">
+          <p class="opening-whisper">A personal birthday surprise for Anjali</p>
+          <h1 class="opening-headline">
+            Someone saved a little birthday surprise just for you, Anjali! 🎁💖
+          </h1>
+          <p class="opening-subtext">
+            Five thoughtful gifts crafted with love, crazy fun memories, and heartfelt wishes by Sourabh.
+          </p>
+
+          <button id="openGiftMainBtn" class="open-gift-cta-btn" aria-label="Open your gift">
+            <span class="btn-sparkle">✨</span>
+            <span class="btn-text">Open Anjali's Surprise</span>
+            <span class="btn-sparkle">✨</span>
+            <span class="btn-glow-shimmer"></span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         STAGE 1: REVEALED HERO WITH ANJALI'S BEST PORTRAIT & INTERACTIVE FILTERS
+         ========================================================================= -->
+    <section class="revealed-hero-section hidden-section" id="revealedHeroSection">
+      <div class="hero-halo-glow"></div>
+      
+      <div class="hero-inner-container">
+        
+        <div class="greeting-badge">
+          <span class="badge-star">✦</span>
+          <span>CELEBRATING OUR QUEEN • ANJALI</span>
+          <span class="badge-star">✦</span>
+        </div>
+
+        <h2 class="hero-main-greeting">
+          Happy Birthday, Anjali! <span class="emoji-pair">🎂💖</span>
+        </h2>
+
+        <p class="hero-intro-lead">
+          Wishing you a day as glowing, joyful, and wonderful as you are! Today is all about celebrating you, Anjali. ✨
+        </p>
+
+        <!-- Interactive Party Soundboard Bar -->
+        <div class="soundboard-fun-bar">
+          <span class="soundboard-title">🎉 Crazy Soundboard:</span>
+          <div class="sound-chips-row">
+            <button class="sound-chip" data-sound="cheer" title="Crowd Cheer">👏 Cheer</button>
+            <button class="sound-chip" data-sound="horn" title="Air Horn Blast">🎺 Air Horn</button>
+            <button class="sound-chip" data-sound="sparkle" title="Fairy Sparkles">✨ Sparkles</button>
+            <button class="sound-chip" data-sound="pop" title="Confetti Cannon">💥 Cannon</button>
+            <button class="sound-chip" data-sound="drum" title="Drum Roll">🥁 Drum Roll</button>
+            <button class="sound-chip" data-sound="party" title="Party Blower">🥳 Party Woo!</button>
+          </div>
+        </div>
+
+        <!-- Anjali's Best Portrait Frame with Interactive Live Filters -->
+        <div class="hero-portrait-card" id="heroPortraitCard">
+          
+          <!-- Virtual Crown Filter -->
+          <div class="virtual-crown-overlay" id="virtualCrown">
+            <span class="crown-svg">👑</span>
+            <div class="crown-sparkles">✨</div>
+          </div>
+
+          <!-- Virtual Sunglasses Filter -->
+          <div class="virtual-shades-overlay" id="virtualShades">
+            <span class="shades-svg">🕶️</span>
+          </div>
+
+          <!-- Virtual Fairy Sparkle Aura -->
+          <div class="virtual-aura-overlay" id="virtualAura"></div>
+
+          <div class="portrait-gold-rim">
+            <div class="floral-brooch fb-top-left">🌸</div>
+            <div class="floral-brooch fb-top-right">✨</div>
+            <div class="floral-brooch fb-bottom-left">✨</div>
+            <div class="floral-brooch fb-bottom-right">🌸</div>
+
+            <div class="portrait-viewport">
+              <img 
+                src="assets/images/hero_portrait.jpg" 
+                alt="Portrait of Anjali holding her sweet baby boy" 
+                class="portrait-img-element"
+                id="heroPortraitImg"
+              />
+              <div class="portrait-glass-shine"></div>
+              
+              <!-- Floating Stickers -->
+              <span class="floating-badge badge-top-right">💛 Queen Anjali</span>
+              <span class="floating-badge badge-bottom-left">👶 Sweetest Mom</span>
+            </div>
+          </div>
+          
+          <div class="portrait-caption-box">
+            <p class="portrait-sweet-quote">“Anjali — A radiant smile, a gentle heart, and the sweetest mother-baby bond.”</p>
+          </div>
+
+          <!-- Live Filter Selector Pills -->
+          <div class="portrait-filters-bar">
+            <span class="filter-prompt-label">✨ Tap to try live photo filters:</span>
+            <div class="filter-buttons-cluster">
+              <button class="filter-pill-btn active-filter" id="filterCrownBtn" title="Toggle Queen's Crown">
+                <span>👑 Crown</span>
+              </button>
+              <button class="filter-pill-btn" id="filterShadesBtn" title="Toggle Cool Boss Sunglasses">
+                <span>🕶️ Cool Shades</span>
+              </button>
+              <button class="filter-pill-btn" id="filterAuraBtn" title="Toggle Magical Angel Glow">
+                <span>💖 Fairy Glow</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- =====================================================================
+             CRAZY FUN BONUS: ANJALI'S QUEEN STATS & COMPLIMENT GENERATOR
+             ===================================================================== -->
+        <div class="anjali-superpowers-box">
+          <div class="superpowers-header">
+            <span class="sp-icon">⚡</span>
+            <h3 class="sp-title">Anjali's Queen Stats & Superpowers</h3>
+            <span class="sp-tag">OFFICIAL 2026 VERIFIED</span>
+          </div>
+
+          <div class="stats-meter-grid">
+            <div class="stat-item">
+              <div class="stat-info">
+                <span class="stat-label">💖 Kindness Level</span>
+                <span class="stat-val">10,000% (Infinite)</span>
+              </div>
+              <div class="stat-bar"><div class="stat-fill" style="width: 100%;"></div></div>
+            </div>
+
+            <div class="stat-item">
+              <div class="stat-info">
+                <span class="stat-label">✨ Smile Radiance</span>
+                <span class="stat-val">1.21 Gigawatts ⚡</span>
+              </div>
+              <div class="stat-bar"><div class="stat-fill fill-gold" style="width: 98%;"></div></div>
+            </div>
+
+            <div class="stat-item">
+              <div class="stat-info">
+                <span class="stat-label">👶 Best Mom Magic</span>
+                <span class="stat-val">Level Godmother 🏆</span>
+              </div>
+              <div class="stat-bar"><div class="stat-fill fill-rose" style="width: 100%;"></div></div>
+            </div>
+
+            <div class="stat-item">
+              <div class="stat-info">
+                <span class="stat-label">⭐ Best Friend Rating</span>
+                <span class="stat-val">5-Star VIP Diamond</span>
+              </div>
+              <div class="stat-bar"><div class="stat-fill fill-gold" style="width: 100%;"></div></div>
+            </div>
+          </div>
+
+          <!-- Crazy Randomized Compliment Dispenser -->
+          <div class="compliment-dispenser-box">
+            <button id="generateComplimentBtn" class="compliment-gen-btn">
+              <span>🎲 Generate Crazy Compliment for Anjali!</span>
+            </button>
+            <div class="compliment-result-card" id="complimentCard">
+              <span class="comp-quote-mark">“</span>
+              <p id="complimentText" class="comp-text">Tap the button above to unlock today's official Anjali praise report! ✨</p>
+              <span class="comp-author">— Certified by Sourabh 💛</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Start Opening Gifts Prompt -->
+        <div class="start-gifts-prompt">
+          <p class="prompt-text">Anjali, you have 5 special gifts waiting below ↓</p>
+          <a href="#gift1Section" class="jump-gift-btn" id="startGiftsBtn">
+            <span>Open Gift 1 — A note for you 💌</span>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- =========================================================================
+         GIFT 1: A note for you 💌 (Exact Letter for Anjali from Sourabh)
+         ========================================================================= -->
+    <section class="gift-section gift-letter-section hidden-section" id="gift1Section">
+      <div class="gift-container">
+        
+        <div class="gift-banner-header">
+          <div class="gift-pill-tag">
+            <span class="pill-gift-icon">🎁</span>
+            <span class="pill-title">GIFT 01 OF 05</span>
+          </div>
+          <h2 class="gift-section-title">A note for you, Anjali 💌</h2>
+          <p class="gift-section-subtitle">A personal birthday letter written straight from the heart.</p>
+        </div>
+
+        <!-- The Letter Card -->
+        <article class="stationery-letter-card" id="letterCard">
+          <div class="stationery-top-bar">
+            <div class="postal-stamp-box">
+              <span class="stamp-icon">💌</span>
+              <div class="stamp-text-col">
+                <span class="st-main">FOR ANJALI</span>
+                <span class="st-sub">SPECIAL DELIVERY</span>
+              </div>
+            </div>
+            <div class="stationery-ribbon-tag">🌸 With Warmth</div>
+          </div>
+
+          <div class="letter-gold-divider"></div>
+
+          <!-- EXACT REQUIRED MESSAGE CONTENT -->
+          <div class="letter-text-content">
+            <h3 class="letter-salutation-heading">
+              Happy Birthday to one of the loveliest people I know, Anjali! 🎂💛
+            </h3>
+
+            <p class="letter-para lead-para">
+              <span class="capital-drop-cap">Y</span>ou have this wonderful way of making ordinary conversations brighter and simple moments more memorable. Your kindness, your smile and the care you show others are just a few of the things that make you such a special friend.
+            </p>
+
+            <div class="letter-sweet-ornament">
+              <span class="ornament-line"></span>
+              <span class="ornament-flower">❦</span>
+              <span class="ornament-line"></span>
+            </div>
+
+            <p class="letter-para">
+              This year brought you a beautiful new chapter with your family and your little one. I hope you always find time for your own happiness and dreams amid all the love you give to others.
+            </p>
+
+            <p class="letter-para">
+              May your birthday be filled with laughter, comfort, good surprises and the people who make you feel at home. I’m grateful to call you my best friend. Have the sweetest day, Anjali—you truly deserve it! 🌸✨
+            </p>
+
+            <div class="letter-signature-block">
+              <p class="sign-intro">With warm wishes,</p>
+              <p class="sign-sender">Sourabh</p>
+            </div>
+          </div>
+
+          <div class="stationery-footer-note">
+            <span>✨ Cherishing our friendship today & always ✨</span>
+          </div>
+        </article>
+
+        <!-- Next Gift Button -->
+        <div class="next-gift-action">
+          <button class="next-gift-btn" data-next="gift2Section">
+            <span>Next: Open Gift 2 — Little moments, big smiles 📸</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- =========================================================================
+         GIFT 2: Little moments, big smiles 📸 (Curated Top 5 Iconic Moments)
+         ========================================================================= -->
+    <section class="gift-section gift-gallery-section hidden-section" id="gift2Section">
+      <div class="gift-container">
+        
+        <div class="gift-banner-header">
+          <div class="gift-pill-tag">
+            <span class="pill-gift-icon">🎁</span>
+            <span class="pill-title">GIFT 02 OF 05</span>
+          </div>
+          <h2 class="gift-section-title">Little moments, big smiles 📸</h2>
+          <p class="gift-section-subtitle">
+            A handpicked collection of your 5 most iconic moments — radiant smiles, royal grace, and sweet family love.
+          </p>
+        </div>
+
+        <!-- Gallery Header Controls -->
+        <div class="gallery-controls-bar">
+          <div class="gallery-counter-badge">
+            <span class="badge-icon">📷</span>
+            <span id="galleryCounterDisplay">Anjali's 5 Top Highlights</span>
+          </div>
+          
+          <div class="gallery-interactive-actions">
+            <button id="shufflePhotosBtn" class="gallery-mini-btn" title="Shuffle photo tilt angles!">🔀 Shuffle Tilt</button>
+            <button id="autoSlideBtn" class="gallery-mini-btn" title="Start Auto Slideshow">▶️ Auto Slideshow</button>
+          </div>
+
+          <p class="gallery-hint">Tap any photo to zoom in high-definition ✨</p>
+        </div>
+
+        <!-- Streamlined Top 5 Curated Polaroid Grid -->
+        <div class="five-polaroids-showcase" id="photoGrid">
+          
+          <!-- Photo 1: Mother & Baby Bond -->
+          <div class="polaroid-card" data-index="0">
+            <div class="polaroid-inner">
+              <div class="polaroid-pin">📍</div>
+              <div class="polaroid-washi-tape tape-gold"></div>
+              <div class="polaroid-img-box">
+                <img src="assets/images/memory_mom_baby_bond.jpg" alt="Anjali with her sweet baby boy" loading="lazy" />
+                <span class="polaroid-badge-tag">👶 Sweetest Mom</span>
+                <span class="zoom-indicator">🔍</span>
+              </div>
+              <div class="polaroid-footer">
+                <span class="polaroid-caption">Mother & Baby Bond 💛</span>
+                <span class="polaroid-date">Precious Milestone</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Photo 2: Royal Wedding Bride -->
+          <div class="polaroid-card" data-index="1">
+            <div class="polaroid-inner">
+              <div class="polaroid-pin">📍</div>
+              <div class="polaroid-washi-tape tape-rose"></div>
+              <div class="polaroid-img-box">
+                <img src="assets/images/memory_wedding_bride.jpg" alt="Anjali as gorgeous traditional wedding bride" loading="lazy" />
+                <span class="polaroid-badge-tag">👑 Royal Queen</span>
+                <span class="zoom-indicator">🔍</span>
+              </div>
+              <div class="polaroid-footer">
+                <span class="polaroid-caption">Royal Bride Grace 🌸</span>
+                <span class="polaroid-date">Pure Elegance</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Photo 3: Married Life Journey -->
+          <div class="polaroid-card" data-index="2">
+            <div class="polaroid-inner">
+              <div class="polaroid-pin">📍</div>
+              <div class="polaroid-washi-tape tape-gold"></div>
+              <div class="polaroid-img-box">
+                <img src="assets/images/memory_sweet_couple.jpg" alt="Anjali and husband smiling together" loading="lazy" />
+                <span class="polaroid-badge-tag">💍 Beautiful Chapter</span>
+                <span class="zoom-indicator">🔍</span>
+              </div>
+              <div class="polaroid-footer">
+                <span class="polaroid-caption">A Beautiful Journey 🏡</span>
+                <span class="polaroid-date">Together Always</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Photo 4: Radiant Sunshine Smile -->
+          <div class="polaroid-card" data-index="3">
+            <div class="polaroid-inner">
+              <div class="polaroid-pin">📍</div>
+              <div class="polaroid-washi-tape tape-rose"></div>
+              <div class="polaroid-img-box">
+                <img src="assets/images/memory_sunshine_yellow.jpg" alt="Anjali radiant sunshine smile in yellow" loading="lazy" />
+                <span class="polaroid-badge-tag">✨ Pure Sunshine</span>
+                <span class="zoom-indicator">🔍</span>
+              </div>
+              <div class="polaroid-footer">
+                <span class="polaroid-caption">That Radiant Smile ✨</span>
+                <span class="polaroid-date">Spreading Warmth</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Photo 5: Princess Gown Elegance -->
+          <div class="polaroid-card" data-index="4">
+            <div class="polaroid-inner">
+              <div class="polaroid-pin">📍</div>
+              <div class="polaroid-washi-tape tape-gold"></div>
+              <div class="polaroid-img-box">
+                <img src="assets/images/memory_princess_gown.jpg" alt="Anjali in pink fairy tale princess gown" loading="lazy" />
+                <span class="polaroid-badge-tag">💖 Fairy Tale Vibe</span>
+                <span class="zoom-indicator">🔍</span>
+              </div>
+              <div class="polaroid-footer">
+                <span class="polaroid-caption">Fairy Tale Elegance 💖</span>
+                <span class="polaroid-date">Celebration Queen</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Next Gift Button -->
+        <div class="next-gift-action">
+          <button class="next-gift-btn" data-next="gift3Section">
+            <span>Next: Open Gift 3 — Your beautiful chapters 🌷</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- =========================================================================
+         GIFT 3: Your beautiful chapters 🌷 (Three Elegant Cards & Fortune Wheel)
+         ========================================================================= -->
+    <section class="gift-section gift-chapters-section hidden-section" id="gift3Section">
+      <div class="gift-container">
+        
+        <div class="gift-banner-header">
+          <div class="gift-pill-tag">
+            <span class="pill-gift-icon">🎁</span>
+            <span class="pill-title">GIFT 03 OF 05</span>
+          </div>
+          <h2 class="gift-section-title">Your beautiful chapters, Anjali 🌷</h2>
+          <p class="gift-section-subtitle">
+            Celebrating who you are as a friend, your married life journey, and the sweetness of being a mom.
+          </p>
+        </div>
+
+        <div class="three-chapters-container">
+          
+          <!-- Card 1: The friend you are -->
+          <div class="chapter-lux-card">
+            <div class="card-accent-tag tag-rose">🌸 FRIENDSHIP</div>
+            <div class="chapter-card-header">
+              <div class="chapter-icon-circle">👭</div>
+              <h3 class="chapter-card-title">The friend you are</h3>
+            </div>
+            <div class="chapter-body-text">
+              <p>
+                Anjali, you bring genuine warmth, easy laughter, and heartfelt positivity into every single conversation.
+              </p>
+              <p>
+                You’re your own wonderful, inspiring person with a bright spark that makes everyone feel valued, supported, and truly at ease.
+              </p>
+            </div>
+            <div class="chapter-footer-flourish">✨ Always authentic & true ✨</div>
+          </div>
+
+          <!-- Card 2: A new chapter together -->
+          <div class="chapter-lux-card">
+            <div class="card-accent-tag tag-gold">💍 MARRIED LIFE</div>
+            <div class="chapter-card-header">
+              <div class="chapter-icon-circle">🏡</div>
+              <h3 class="chapter-card-title">A new chapter together</h3>
+            </div>
+            <div class="chapter-body-text">
+              <p>
+                Stepping into married life with so much grace, companionship, and shared happiness.
+              </p>
+              <p>
+                May your home always be a cozy sanctuary of mutual respect, peaceful evenings, shared laughs, and deep love that grows with every season.
+              </p>
+            </div>
+            <div class="chapter-footer-flourish">💛 A blessed home & journey 💛</div>
+          </div>
+
+          <!-- Card 3: The sweetest little chapter -->
+          <div class="chapter-lux-card highlight-lux">
+            <div class="card-accent-tag tag-blush">👶 MOTHERHOOD</div>
+            <div class="chapter-card-header">
+              <div class="chapter-icon-circle">🍼</div>
+              <h3 class="chapter-card-title">The sweetest little chapter</h3>
+            </div>
+            <div class="chapter-body-text">
+              <p>
+                Seeing you hold and nurture your sweet baby is one of the most heartwarming sights in the world, Anjali.
+              </p>
+              <p>
+                You handle motherhood with such natural tenderness, patience, and boundless love. Wishing you endless sweet giggles and precious milestones.
+              </p>
+            </div>
+            <div class="chapter-footer-flourish">🌸 The sweetest bond of all 🌸</div>
+          </div>
+
+        </div>
+
+        <!-- Interactive Fortune Spinner Wheel for Anjali -->
+        <div class="fortune-wheel-section">
+          <div class="fortune-wheel-box">
+            <span class="wheel-kicker">🎡 ANJALI'S 2026 BLESSING SPINNER 🎡</span>
+            <h3 class="wheel-heading">Spin for Anjali's Birthday Blessing!</h3>
+            <p class="wheel-desc">Tap the spin button to see what wonderful gift this year has in store for you!</p>
+            
+            <div class="wheel-stage">
+              <div class="wheel-pointer">▼</div>
+              <div class="wheel-disc" id="fortuneWheel">
+                <div class="wheel-slice slice-1"><span>🕊️ Deep Peace</span></div>
+                <div class="wheel-slice slice-2"><span>👶 Baby Giggles</span></div>
+                <div class="wheel-slice slice-3"><span>✈️ Dream Trip</span></div>
+                <div class="wheel-slice slice-4"><span>💆 Pamper Day</span></div>
+                <div class="wheel-slice slice-5"><span>💎 Pure Luck</span></div>
+                <div class="wheel-slice slice-6"><span>🌸 Golden Glow</span></div>
+              </div>
+              <button id="spinWheelBtn" class="wheel-center-btn" aria-label="Spin the wheel">SPIN!</button>
+            </div>
+
+            <div class="wheel-result-toast" id="wheelResultToast">
+              <span class="wheel-res-icon">✨</span>
+              <span class="wheel-res-text" id="wheelResText">Spin the wheel above, Anjali!</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Next Gift Button -->
+        <div class="next-gift-action">
+          <button class="next-gift-btn" data-next="gift4Section">
+            <span>Next: Open Gift 4 — A pocketful of wishes ✨</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- =========================================================================
+         GIFT 4: A pocketful of wishes ✨ (Five Clickable Stars & Scratch Card)
+         ========================================================================= -->
+    <section class="gift-section gift-wishes-section hidden-section" id="gift4Section">
+      <div class="gift-container">
+        
+        <div class="gift-banner-header">
+          <div class="gift-pill-tag">
+            <span class="pill-gift-icon">🎁</span>
+            <span class="pill-title">GIFT 04 OF 05</span>
+          </div>
+          <h2 class="gift-section-title">A pocketful of wishes for Anjali ✨</h2>
+          <p class="gift-section-subtitle">
+            Tap each glowing star below to unlock five heartfelt birthday blessings for your year ahead.
+          </p>
+        </div>
+
+        <!-- Wishes Progress Counter -->
+        <div class="wishes-status-bar">
+          <span class="status-label">Wishes Unlocked:</span>
+          <span class="status-count" id="unlockedWishesCount">0 / 5</span>
+        </div>
+
+        <!-- 5 Interactive Wish Stars -->
+        <div class="five-wishes-grid">
+          
+          <!-- Wish 1: Peace -->
+          <div class="wish-star-card" data-wish-id="1">
+            <div class="star-front">
+              <div class="star-icon-ring">🕊️</div>
+              <span class="star-title-front">Peace</span>
+              <span class="tap-hint">Tap to reveal ⭐</span>
+            </div>
+            <div class="star-back">
+              <span class="wish-theme-badge">🕊️ PEACE</span>
+              <h4 class="wish-back-heading">Gentle Calm</h4>
+              <p class="wish-back-message">
+                Anjali, may you always find quiet moments of calm, restful pauses, and deep peace in your heart.
+              </p>
+            </div>
+          </div>
+
+          <!-- Wish 2: Laughter -->
+          <div class="wish-star-card" data-wish-id="2">
+            <div class="star-front">
+              <div class="star-icon-ring">😄</div>
+              <span class="star-title-front">Laughter</span>
+              <span class="tap-hint">Tap to reveal ⭐</span>
+            </div>
+            <div class="star-back">
+              <span class="wish-theme-badge">😄 LAUGHTER</span>
+              <h4 class="wish-back-heading">Endless Smiles</h4>
+              <p class="wish-back-message">
+                May your days be sprinkled with spontaneous giggles, fun conversations, and lighthearted joy that never fades.
+              </p>
+            </div>
+          </div>
+
+          <!-- Wish 3: Dreams -->
+          <div class="wish-star-card" data-wish-id="3">
+            <div class="star-front">
+              <div class="star-icon-ring">🌟</div>
+              <span class="star-title-front">Dreams</span>
+              <span class="tap-hint">Tap to reveal ⭐</span>
+            </div>
+            <div class="star-back">
+              <span class="wish-theme-badge">🌟 DREAMS</span>
+              <h4 class="wish-back-heading">Bright Horizons</h4>
+              <p class="wish-back-message">
+                May you always keep nurturing your own creative spark, personal passions, and all the wonderful dreams you hold in your soul.
+              </p>
+            </div>
+          </div>
+
+          <!-- Wish 4: Family Moments -->
+          <div class="wish-star-card" data-wish-id="4">
+            <div class="star-front">
+              <div class="star-icon-ring">🏡</div>
+              <span class="star-title-front">Family Moments</span>
+              <span class="tap-hint">Tap to reveal ⭐</span>
+            </div>
+            <div class="star-back">
+              <span class="wish-theme-badge">🏡 FAMILY</span>
+              <h4 class="wish-back-heading">Cozy Togetherness</h4>
+              <p class="wish-back-message">
+                May your home always overflow with shared comfort, joyful meals, warm hugs, and sweet memories with your husband and baby.
+              </p>
+            </div>
+          </div>
+
+          <!-- Wish 5: Time for Yourself -->
+          <div class="wish-star-card" data-wish-id="5">
+            <div class="star-front">
+              <div class="star-icon-ring">🌸</div>
+              <span class="star-title-front">Time for Yourself</span>
+              <span class="tap-hint">Tap to reveal ⭐</span>
+            </div>
+            <div class="star-back">
+              <span class="wish-theme-badge">🌸 TIME FOR YOU</span>
+              <h4 class="wish-back-heading">Self-Care & Grace</h4>
+              <p class="wish-back-message">
+                May you always take guilt-free moments just for yourself—to sip your favorite drink, relax, recharge, and simply shine.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Scratch-Off Best Friend Coupon for Anjali -->
+        <div class="scratch-coupon-wrapper">
+          <div class="scratch-coupon-box" id="scratchCoupon" role="button" tabindex="0" title="Tap to scratch and reveal Anjali's VIP pass!">
+            <div class="coupon-seal">🎟️ ANJALI'S VIP BEST FRIEND PASS</div>
+            <div class="coupon-hidden-content">
+              <h4>Lifetime Best Friend VIP Pass for Anjali 💖</h4>
+              <p class="coupon-deal">“Valid for unlimited phone chats, non-judgmental emergency listening, emergency pizza sessions, and lifetime cheerleading whenever you need it!”</p>
+              <span class="coupon-sign">— Certified & Signed with love, Sourabh 💛</span>
+            </div>
+            <div class="coupon-scratch-layer" id="scratchLayer">
+              <span>✨ Tap to Scratch & Reveal Anjali's VIP Pass ✨</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Next Gift Button -->
+        <div class="next-gift-action">
+          <button class="next-gift-btn" data-next="gift5Section">
+            <span>Next: Open Gift 5 — One final surprise 🎂</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- =========================================================================
+         GIFT 5: One final surprise 🎂 (Featured Card & Virtual Cake Ceremony)
+         ========================================================================= -->
+    <section class="gift-section gift-final-section hidden-section" id="gift5Section">
+      <div class="gift-container">
+        
+        <div class="gift-banner-header">
+          <div class="gift-pill-tag">
+            <span class="pill-gift-icon">🎁</span>
+            <span class="pill-title">GIFT 05 OF 05</span>
+          </div>
+          <h2 class="gift-section-title">One final surprise for Anjali 🎂</h2>
+          <p class="gift-section-subtitle">
+            A grand finale wish and interactive birthday cake ceremony!
+          </p>
+        </div>
+
+        <!-- Featured Birthday Card Image Showcase -->
+        <div class="final-card-showcase">
+          <div class="featured-card-frame">
+            <div class="featured-card-viewport">
+              <img 
+                src="assets/images/hero_portrait.jpg" 
+                alt="Featured Birthday Card of Anjali and her baby" 
+                class="featured-card-img"
+              />
+            </div>
+            <div class="featured-card-ribbon">
+              <span>✨ Birthday Queen Anjali ✨</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- EXACT REQUIRED FINAL CLOSING MESSAGE -->
+        <div class="final-closing-statement">
+          <p class="closing-exact-quote">
+            “If today gives you even half as many smiles as you’ve given the people around you, it will be a wonderful day. Happy Birthday, bestie! 🎈💛”
+          </p>
+        </div>
+
+        <!-- Interactive Virtual Birthday Cake -->
+        <div class="virtual-cake-ceremony-box">
+          <div class="cake-ritual-header">
+            <span class="cake-sparkle-tag">🕯️ MAKE A WISH 🕯️</span>
+            <h3 class="cake-ritual-title">Blow Out the Birthday Candles, Anjali!</h3>
+            <p class="cake-ritual-desc">
+              Close your eyes, make a special wish, then tap the candles to blow them out! ✨
+            </p>
+          </div>
+
+          <div class="interactive-cake-stage" id="cakeStage" role="button" tabindex="0" aria-label="Tap cake to blow out candles">
+            <div class="cake-ambient-halo" id="cakeHalo"></div>
+            
+            <div class="cake-3d-model">
+              <!-- Multi-Candle Row -->
+              <div class="multi-candles-row">
+                <div class="candle-assembly c-1">
+                  <div class="candle-flame"></div>
+                  <div class="candle-smoke"></div>
+                  <div class="candle-wick"></div>
+                  <div class="candle-body"></div>
+                </div>
+                <div class="candle-assembly c-2 main-c">
+                  <div class="candle-flame"></div>
+                  <div class="candle-smoke"></div>
+                  <div class="candle-wick"></div>
+                  <div class="candle-body"></div>
+                </div>
+                <div class="candle-assembly c-3">
+                  <div class="candle-flame"></div>
+                  <div class="candle-smoke"></div>
+                  <div class="candle-wick"></div>
+                  <div class="candle-body"></div>
+                </div>
+              </div>
+
+              <!-- Cake Top Tier -->
+              <div class="cake-layer layer-top">
+                <div class="layer-decor-rosettes">🍓 🌸 🍓 🌸 🍓</div>
+              </div>
+
+              <!-- Cake Middle Tier -->
+              <div class="cake-layer layer-mid">
+                <span class="mid-cake-text">✨ HAPPY BIRTHDAY ANJALI ✨</span>
+              </div>
+
+              <!-- Cake Base Tier -->
+              <div class="cake-layer layer-base"></div>
+
+              <!-- Gold Stand -->
+              <div class="cake-gold-pedestal"></div>
+            </div>
+
+            <div class="tap-candle-badge" id="tapCandlePrompt">
+              <span>👆 Anjali, tap cake to blow out candles!</span>
+            </div>
+          </div>
+
+          <!-- Wish Sealed Message Card -->
+          <div class="wish-sealed-banner" id="wishSealedBanner">
+            <div class="wish-icon-row">🎉 🌟 🎂</div>
+            <h4>Anjali, your birthday wish has been received!</h4>
+            <p>May every good thing you dream of unfold beautifully in your life this year. ✨</p>
+          </div>
+        </div>
+
+        <!-- Replay & Celebration Controls -->
+        <div class="final-actions-cluster">
+          <button id="confettiShowerBtn" class="action-pill-btn gold-btn" aria-label="Shower with Confetti">
+            <span>🎉 Shower Confetti on Anjali!</span>
+          </button>
+          <button id="sendWarmHeartsBtn" class="action-pill-btn blush-btn" aria-label="Send Warm Wishes">
+            <span>💖 Send Warm Hearts</span>
+          </button>
+          <button id="replaySurpriseBtn" class="action-pill-btn outline-btn" aria-label="Replay the surprise">
+            <span>↺ Replay the surprise</span>
+          </button>
+        </div>
+
+        <div class="friendship-credit-card">
+          <p class="credit-main">Crafted with care, fun & friendship for Anjali by Sourabh 💛</p>
+          <p class="credit-sub">Wishing you the happiest, most unforgettable birthday in the world 🌸</p>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================================
+       HIGH RESOLUTION PHOTO LIGHTBOX MODAL
+       ========================================================================= -->
+  <div class="photo-lightbox-modal" id="lightboxModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
+    
+    <div class="lightbox-content-window">
+      <button class="lightbox-close-btn" id="lightboxClose" aria-label="Close photo view">&times;</button>
+      
+      <button class="lightbox-nav-btn prev-btn" id="lightboxPrev" aria-label="Previous photo">&#10094;</button>
+      <button class="lightbox-nav-btn next-btn" id="lightboxNext" aria-label="Next photo">&#10095;</button>
+
+      <div class="lightbox-card-frame">
+        <div class="lightbox-image-stage">
+          <img src="" alt="" id="lightboxImg" class="lightbox-zoom-img" />
+        </div>
+        
+        <div class="lightbox-info-bar">
+          <div class="info-left">
+            <h4 id="lightboxCaption" class="lightbox-caption-text">Caption</h4>
+          </div>
+          <div class="info-right">
+            <span id="lightboxCounter" class="lightbox-counter-badge">1 / 5</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Toast Notification -->
+  <div class="interactive-toast" id="toastNotification" role="alert" aria-live="polite">
+    <span class="toast-emoji" id="toastIcon">✨</span>
+    <span class="toast-msg" id="toastText">Wishing you happiness, Anjali!</span>
+  </div>
+
+  <!-- Main JavaScript File -->
+  <script src="script.js"></script>
+</body>
+</html>
